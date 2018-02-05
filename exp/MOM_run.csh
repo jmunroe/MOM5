@@ -203,13 +203,13 @@ if ( $name  == global_0.25_degree_NYF & $npes != 960) then
 endif
 
 
-set runCommand = "$mpirunCommand $npes $executable >fms.out"
+set runCommand = "$mpirunCommand $npes $executable"
 if ( $valgrind ) then
-    set runCommand = "$mpirunCommand $npes -x LD_PRELOAD=$VALGRIND_MPI_WRAPPERS valgrind --gen-suppressions=all --suppressions=../../test/valgrind_suppressions.txt --main-stacksize=2000000000 --max-stackframe=2000000000 --error-limit=no $executable >fms.out"
+    set runCommand = "$mpirunCommand $npes -x LD_PRELOAD=$VALGRIND_MPI_WRAPPERS valgrind --gen-suppressions=all --suppressions=../../test/valgrind_suppressions.txt --main-stacksize=2000000000 --max-stackframe=2000000000 --error-limit=no $executable"
 endif
 
 if ( $debug ) then
-    set runCommand = "$mpirunCommand --debug $npes $executable >fms.out"
+    set runCommand = "$mpirunCommand --debug $npes $executable"
 endif
 
 echo "About to run experiment $name with model $type at `date`. The command is: $runCommand"
@@ -221,7 +221,7 @@ if ( $valid_npes ) then
 endif
 
 # Run the model
-$runCommand
+$runCommand >fms.out
 set model_status = $status
 if ( $model_status != 0) then
     echo "ERROR: Model failed to run to completion"
@@ -316,6 +316,8 @@ if ( $npes > 1 ) then
     end
 endif
 
+cd $expdir
+mkdir ascii
 # rename ascii files with the date
 foreach out (`ls *.out`)
    mv $out ascii/$begindate.$out
