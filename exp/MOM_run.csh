@@ -317,11 +317,18 @@ if ( $npes > 1 ) then
 endif
 
 cd $expdir
+mkdir history
 mkdir ascii
 # rename ascii files with the date
 foreach out (`ls *.out`)
    mv $out ascii/$begindate.$out
 end
+
+# rename nc files with the date
+foreach ncfile (`/bin/ls *.nc`)
+   mv $ncfile history/$begindate.$ncfile
+end
+
 
 unset echo
 
